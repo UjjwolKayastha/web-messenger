@@ -1,3 +1,3 @@
 export * from "./Header";
-export * from "./Sidebar";
+export * from "./SidebarUsers";
 export * from "./ChatScreen";
