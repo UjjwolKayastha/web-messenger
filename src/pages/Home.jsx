@@ -9,7 +9,7 @@ const useStyles = makeStyles({
   container: {
     display: "flex",
     position: "fixed",
-    width: "100%",
+    width: "98%",
     height: "calc(100% - 60px)",
     overflow: "hidden",
     marginTop: 60,
