@@ -1,6 +1,7 @@
 import { Button, makeStyles } from "@material-ui/core";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
+import { logout } from "../../redux";
 
 const useStyles = makeStyles(() => ({
   menuButton: {
@@ -15,6 +16,12 @@ export const MenuItems = () => {
   const classes = useStyles();
 
   const auth = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
+
+  const logOut = () => {
+    dispatch(logout());
+  };
 
   const headersData = [
     !auth.authenticated
@@ -32,7 +39,6 @@ export const MenuItems = () => {
       : {},
     {
       label: "Logout",
-      href: "/logout",
     },
   ];
   return headersData.map(({ label, href }) => {
@@ -45,6 +51,7 @@ export const MenuItems = () => {
             to: href ? href : "#",
             component: RouterLink,
             className: classes.menuButton,
+            onClick: label === "Logout" ? logOut : () => {},
           }}
         >
           {label}

@@ -25,6 +25,7 @@ export const signUp = (user) => {
                 email: user.email,
                 uid: data.user.uid,
                 createdAt: new Date(),
+                isOnline: true,
               })
               .then(() => {
                 const loggedInUser = {
@@ -59,7 +60,7 @@ export const signIn = (user) => {
       .then((data) => {
         console.log("USER DATA", data);
         const loggedInUser = {
-          name: data.user.displayName.split(" ")[0],
+          name: data?.user?.displayName?.split(" ")[0],
           email: user.email,
           uid: data.user.uid,
         };
@@ -99,5 +100,26 @@ export const isLoggedIn = () => {
         payload: { error: "Please Login" },
       });
     }
+  };
+};
+
+export const logout = () => {
+  return async (dispatch) => {
+    dispatch({ type: `${authConstants.USER_LOGOUT}_REQUEST` });
+
+    await auth
+      .signOut()
+      .then(() => {
+        localStorage.clear();
+        dispatch({ type: `${authConstants.USER_LOGOUT}_SUCCESS` });
+        console.log("Logged out successfully");
+      })
+      .catch((e) => {
+        dispatch({
+          type: `${authConstants.USER_LOGOUT}_FAILURE`,
+          payload: { e },
+        });
+        console.log(e);
+      });
   };
 };

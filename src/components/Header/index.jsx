@@ -29,7 +29,7 @@ export const Header = () => {
   const classes = useStyles();
 
   const authUser = useSelector((state) => state.auth);
-  console.log("AUTNECNINANSNAKLS", authUser);
+  // console.log("AUTNECNINANSNAKLS", authUser);
 
   const logo = (
     <Typography variant="h6" component="h1" className={classes.logo}>
