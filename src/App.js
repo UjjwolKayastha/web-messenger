@@ -14,7 +14,7 @@ const App = () => {
     if (!authUser.authenticated) {
       dispatch(isLoggedIn());
     }
-  });
+  }, []);
 
   return (
     <div>
