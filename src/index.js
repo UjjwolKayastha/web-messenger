@@ -3,12 +3,15 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { Provider } from "react-redux";
 import { store } from "./redux";
+import { AuthProvider } from "./AuthContext";
 
 ReactDOM.render(
   <Provider store={store}>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    <AuthProvider>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </AuthProvider>
   </Provider>,
   document.getElementById("root")
 );
