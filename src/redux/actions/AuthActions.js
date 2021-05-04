@@ -4,6 +4,7 @@ import { authConstants } from "../constants";
 export const signUp = (user) => {
   return async (dispatch) => {
     dispatch({ type: `${authConstants.USER_LOGIN}_REQUEST` });
+
     await auth
       .createUserWithEmailAndPassword(user.email, user.password)
       .then((data) => {
@@ -11,7 +12,7 @@ export const signUp = (user) => {
         const currentUser = auth.currentUser;
         const name = `${user.fullName}`;
 
-        console.log("CURRENT USER", currentUser, name);
+        // console.log("CURRENT USER", currentUser, name);
         currentUser
           .updateProfile({
             displayName: name,
@@ -20,7 +21,8 @@ export const signUp = (user) => {
             console.log("User updated.");
             firestore
               .collection("users")
-              .add({
+              .doc(data.user.uid)
+              .set({
                 name: user.fullName,
                 email: user.email,
                 uid: data.user.uid,
@@ -59,6 +61,10 @@ export const signIn = (user) => {
       .signInWithEmailAndPassword(user.email, user.password)
       .then((data) => {
         console.log("USER DATA", data);
+        firestore
+          .collection("users")
+          .doc(data.user.uid)
+          .update({ isOnline: true });
         const loggedInUser = {
           name: data?.user?.displayName?.split(" ")[0],
           email: user.email,
@@ -103,23 +109,31 @@ export const isLoggedIn = () => {
   };
 };
 
-export const logout = () => {
+export const logout = (uid) => {
+  console.log("USERID FROM LOGOUT", uid);
   return async (dispatch) => {
     dispatch({ type: `${authConstants.USER_LOGOUT}_REQUEST` });
 
-    await auth
-      .signOut()
-      .then(() => {
-        localStorage.clear();
-        dispatch({ type: `${authConstants.USER_LOGOUT}_SUCCESS` });
-        console.log("Logged out successfully");
+    firestore
+      .collection("users")
+      .doc(uid)
+      .update({ isOnline: false })
+      .then(async () => {
+        await auth
+          .signOut()
+          .then(() => {
+            localStorage.clear();
+            dispatch({ type: `${authConstants.USER_LOGOUT}_SUCCESS` });
+            console.log("Logged out successfully");
+          })
+          .catch((e) => {
+            dispatch({
+              type: `${authConstants.USER_LOGOUT}_FAILURE`,
+              payload: { e },
+            });
+            console.log(e);
+          });
       })
-      .catch((e) => {
-        dispatch({
-          type: `${authConstants.USER_LOGOUT}_FAILURE`,
-          payload: { e },
-        });
-        console.log(e);
-      });
+      .catch((err) => console.log(err));
   };
 };

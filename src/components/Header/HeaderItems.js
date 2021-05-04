@@ -20,7 +20,7 @@ export const MenuItems = () => {
   const dispatch = useDispatch();
 
   const logOut = () => {
-    dispatch(logout());
+    dispatch(logout(auth.uid));
   };
 
   const headersData = [
