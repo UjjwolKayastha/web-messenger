@@ -1,6 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-import React, { useContext } from "react";
-import { AuthContext } from "../../AuthContext";
+import React from "react";
 
 const useStyles = makeStyles({
   container: {
