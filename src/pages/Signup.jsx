@@ -4,7 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { Button } from "@material-ui/core";
 import { signUp } from "../redux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,6 +25,9 @@ export const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+
+  const auth = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
 
   const registerUser = (e) => {
@@ -35,6 +39,10 @@ export const Signup = () => {
     };
     dispatch(signUp(user));
   };
+
+  if (auth.authenticated) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
